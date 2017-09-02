@@ -7,7 +7,7 @@ from walk_folders import readable_byte_size
 
 
 def _synchronize_trees(src_dir, src_dirs, src_files, src_files_stat, dst_dir, dst_dirs, dst_files,
-                       dst_files_stat):
+                       dst_files_stat, add_only):
     for a_dir in src_dirs:
         if a_dir not in dst_dirs:
             logging.info("Must create dst dir '%s'", dst_dir + '/' + a_dir)
@@ -15,11 +15,11 @@ def _synchronize_trees(src_dir, src_dirs, src_files, src_files_stat, dst_dir, ds
                 os.mkdir(dst_dir + '/' + a_dir)
     for index, file in enumerate(src_files):
         must_sync = False
+        src_stat = src_files_stat[index]
         if file not in dst_files:
             logging.info("Must create '%s'", dst_dir + '/' + file)
             must_sync = True
         else:
-            src_stat = src_files_stat[index]
             dst_stat = dst_files_stat[dst_files.index(file)]
             if src_stat.st_size != dst_stat.st_size:
                 logging.info("Size mismatch: '%s'", dst_dir + '/' + file)
@@ -37,19 +37,20 @@ def _synchronize_trees(src_dir, src_dirs, src_files, src_files_stat, dst_dir, ds
                 except:
                     logging.error('Cannot copy file %s', src_file)
 
-    for a_dir in dst_dirs:
-       if a_dir not in src_dirs:
-            logging.info("Must delete dst dir '%s'", dst_dir + '/' + a_dir)
-            if DO_CHANGES:
-                shutil.rmtree(dst_dir + '/' + a_dir)
-    for file in dst_files:
-        if file not in src_files:
-            logging.info("Must delete dst file '%s'", dst_dir + '/' + file)
-            if DO_CHANGES:
-                os.remove(dst_dir + '/' + file)
+    if not add_only:
+        for a_dir in dst_dirs:
+           if a_dir not in src_dirs:
+                logging.info("Must delete dst dir '%s'", dst_dir + '/' + a_dir)
+                if DO_CHANGES:
+                    shutil.rmtree(dst_dir + '/' + a_dir)
+        for file in dst_files:
+            if file not in src_files:
+                logging.info("Must delete dst file '%s'", dst_dir + '/' + file)
+                if DO_CHANGES:
+                    os.remove(dst_dir + '/' + file)
 
 
-def _sync(root_src, root_dst, current_dir, synchronize_function):
+def _sync(root_src, root_dst, current_dir, add_only, synchronize_function):
     src_dir = root_src + current_dir
     dst_dir = root_dst + current_dir
 
@@ -100,15 +101,15 @@ def _sync(root_src, root_dst, current_dir, synchronize_function):
     yield current_dir, total_src_dirs_count, total_src_files_count, total_src_files_size
 
     synchronize_function(src_dir, src_dirs, src_files, src_files_stat, dst_dir, dst_dirs, dst_files,
-                         dst_files_stat)
+                         dst_files_stat, add_only)
 
     for a_dir in sorted(src_dirs):
         for current_dir, src_dirs_count, src_files_count, src_files_size in _sync(src_dir, dst_dir, '/' + a_dir,
-                                                                                  synchronize_function):
+                                                                                  add_only, synchronize_function):
             yield current_dir, src_dirs_count, src_files_count, src_files_size
 
 
-def sync_folders(root_src, root_dst, synchronize_function=_synchronize_trees):
+def sync_folders(root_src, root_dst, add_only, synchronize_function=_synchronize_trees):
 
     if not isinstance(root_src, str):
         root_src = str(root_src)
@@ -128,7 +129,7 @@ def sync_folders(root_src, root_dst, synchronize_function=_synchronize_trees):
     total_src_files_count = 0
     total_src_files_size = 0
 
-    for current_dir, src_dirs_count, src_files_count, src_files_size in _sync(root_src, root_dst, '',
+    for current_dir, src_dirs_count, src_files_count, src_files_size in _sync(root_src, root_dst, '', add_only,
                                                                               synchronize_function):
         total_src_dirs_count += src_dirs_count
         total_src_files_count += src_files_count

@@ -1,7 +1,5 @@
 import logging
 import os
-import shutil
-from do_changes import *
 from common_extensions import *
 
 

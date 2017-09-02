@@ -26,7 +26,7 @@ def picasa_to_piwigo_face_tags():
 # Normalize source files
 
 def normalize_source_files():
-    sync_folders(LOCAL_PHOTOS_ORIGINALS, LOCAL_PHOTOS_PIWIGO,
+    sync_folders(LOCAL_PHOTOS_ORIGINALS, LOCAL_PHOTOS_PIWIGO, add_only=False,
                  synchronize_function=synchronize_picture_and_video_normalization)
 
 
@@ -35,10 +35,10 @@ def normalize_source_files():
 
 
 def synchronize_trees():
-    sync_folders(LOCAL_PHOTOS_ORIGINALS,    LOCAL_BACKUP_PHOTOS_ORIGINALS)
-    sync_folders(LOCAL_PHOTOS_PIWIGO,       LOCAL_BACKUP_PHOTOS_PIWIGO)
-    sync_folders(LOCAL_PHOTOS_PIWIGO,       REMOTE_PHOTOS_PIWIGO)
-    sync_folders(LOCAL_PHOTOS_ORIGINALS,    REMOTE_BACKUP_PHOTOS_ORIGINALS)
+    sync_folders(LOCAL_PHOTOS_ORIGINALS,    LOCAL_BACKUP_PHOTOS_ORIGINALS,  add_only=False)
+    sync_folders(LOCAL_PHOTOS_PIWIGO,       LOCAL_BACKUP_PHOTOS_PIWIGO,     add_only=False)
+    sync_folders(LOCAL_PHOTOS_PIWIGO,       REMOTE_PHOTOS_PIWIGO,           add_only=False)
+    sync_folders(LOCAL_PHOTOS_ORIGINALS,    REMOTE_BACKUP_PHOTOS_ORIGINALS, add_only=False)
 
 
 #####################################

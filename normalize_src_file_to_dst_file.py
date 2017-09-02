@@ -197,19 +197,14 @@ def _check_normalize_dst_to_src_video(dst_file, src_folder, src_files):
             dst_file.unlink()
 
 
-def _check_normalize_dst_to_src_file(dst_file,
-                                     src_folder,
-                                     src_files):
+def _check_normalize_dst_to_src_file(dst_file, src_folder, src_files):
     if dst_file.suffix in ['.jpg', '.jpeg', '.png']:
         _check_normalize_dst_to_src_picture(dst_file, src_folder, src_files)
     elif dst_file.suffix in ['.mp4', '.mov', '.avi', '.mpg', '.mkv', '.m2ts']:
         _check_normalize_dst_to_src_video(dst_file, src_folder, src_files)
 
 
-def _check_normalize_src_to_dst_folder(src_folder,
-                                       dst_folder,
-                                       src_files,
-                                       dst_files):
+def _check_normalize_src_to_dst_folder(src_folder, dst_folder, src_files, dst_files):
     if not dst_folder.is_dir():
         logging.info('Create missing destination directory: %s', dst_folder)
         if DO_FOLDER_CHANGES:
@@ -220,10 +215,7 @@ def _check_normalize_src_to_dst_folder(src_folder,
                                          dst_files)
 
 
-def _check_normalize_dst_to_src_folder(src_folder,
-                                       dst_folder,
-                                       src_files,
-                                       dst_files):
+def _check_normalize_dst_to_src_folder(src_folder, dst_folder, src_files, dst_files):
     if dst_folder.name != 'pwg_representative':
         if not src_folder.is_dir():
             logging.info('Deleting destination directory %s because source does not exist:', dst_folder.path)
@@ -237,16 +229,11 @@ def _check_normalize_dst_to_src_folder(src_folder,
 
 
 def synchronize_picture_and_video_normalization(src_dir, src_dirs, src_files, src_files_stat, dst_dir, dst_dirs,
-                                                dst_files, dst_files_stat):
+                                                dst_files, dst_files_stat, add_only):
     del src_dirs
     del src_files_stat
     del dst_dirs
     del dst_files_stat
-    _check_normalize_src_to_dst_folder(Path(src_dir),
-                                       Path(dst_dir),
-                                       src_files,
-                                       dst_files)
-    _check_normalize_dst_to_src_folder(Path(src_dir),
-                                       Path(dst_dir),
-                                       src_files,
-                                       dst_files)
+    _check_normalize_src_to_dst_folder(Path(src_dir), Path(dst_dir), src_files, dst_files)
+    if not add_only:
+        _check_normalize_dst_to_src_folder(Path(src_dir), Path(dst_dir), src_files, dst_files)
