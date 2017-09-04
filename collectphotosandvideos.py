@@ -41,7 +41,7 @@ def collect_photos_and_videos():
                           'Google Photos']
 
     identifierDirs = [(LOCAL_PHOTOS_TRANSFER,                   'Mémoire de stockage interne',  'Téléphone'),
-                      (LOCAL_PHOTOS_TRANSFER,                   'DCIM/100NIKON',                'Appareil photo'),
+                      (LOCAL_PHOTOS_TRANSFER,                   'DCIM/1[0..9]*NIKON',           'Appareil photo'),
                       (LOCAL_PHOTOS_TRANSFER,                   'PRIVATE/AVCHD/BDMV/STREAM',    'Caméscope (vidéos)'),
                       (LOCAL_PHOTOS_TRANSFER,                   'disk/DCIM',                    'Caméscope (photos)'),
                       (LOCAL_PHOTOS_TRANSFER,                   'DCIM/100MEDIA',                'Caméra sport'),

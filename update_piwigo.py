@@ -5,6 +5,7 @@ from local_remote_directories import *
 from face_tags import transfert_picasa_to_piwigo_face_tags
 from lower_extensions import lower_extensions
 from normalize_src_file_to_dst_file import synchronize_picture_and_video_normalization
+from internal_piwigo_synchronize import internal_piwigo_synchronize
 
 
 #####################################
@@ -34,10 +35,13 @@ def normalize_source_files():
 # Copy files
 
 
-def synchronize_trees():
+def synchronize_main_tree():
+    sync_folders(LOCAL_PHOTOS_PIWIGO,       REMOTE_PHOTOS_PIWIGO,           add_only=False)
+
+
+def synchronize_backup_trees():
     sync_folders(LOCAL_PHOTOS_ORIGINALS,    LOCAL_BACKUP_PHOTOS_ORIGINALS,  add_only=False)
     sync_folders(LOCAL_PHOTOS_PIWIGO,       LOCAL_BACKUP_PHOTOS_PIWIGO,     add_only=False)
-    sync_folders(LOCAL_PHOTOS_PIWIGO,       REMOTE_PHOTOS_PIWIGO,           add_only=False)
     sync_folders(LOCAL_PHOTOS_ORIGINALS,    REMOTE_BACKUP_PHOTOS_ORIGINALS, add_only=False)
 
 
@@ -56,5 +60,11 @@ if __name__ == "__main__":
     logging.info('Normalize source files')
     normalize_source_files()
 
-    logging.info('Synchronize trees')
-    synchronize_trees()
+    logging.info('Synchronize main tree')
+    synchronize_main_tree()
+
+    logging.info('Internal Piwigo Synchronize')
+    internal_piwigo_synchronize()
+
+    logging.info('Synchronize backup trees')
+    synchronize_backup_trees()
