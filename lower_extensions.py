@@ -1,5 +1,6 @@
 from walk_folders import *
 from local_remote_directories import *
+from do_changes import *
 
 
 #####################################
@@ -18,7 +19,7 @@ def _walk_function_lower_extension(file, file_stat):
 
 
 def lower_extensions():
-    walk_folders(_walk_function_lower_extension, LOCAL_PHOTOS_PIWIGO)
+#    walk_folders(_walk_function_lower_extension, LOCAL_PHOTOS_PIWIGO)
     walk_folders(_walk_function_lower_extension, LOCAL_PHOTOS_ORIGINALS)
-    walk_folders(_walk_function_lower_extension, LOCAL_BACKUP_PHOTOS_PIWIGO)
-    walk_folders(_walk_function_lower_extension, LOCAL_BACKUP_PHOTOS_ORIGINALS)
+#    walk_folders(_walk_function_lower_extension, LOCAL_BACKUP_PHOTOS_PIWIGO)
+#    walk_folders(_walk_function_lower_extension, LOCAL_BACKUP_PHOTOS_ORIGINALS)
