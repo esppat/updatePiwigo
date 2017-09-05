@@ -12,7 +12,11 @@ def _synchronize_trees(src_dir, src_dirs, src_files, src_files_stat, dst_dir, ds
         if a_dir not in dst_dirs:
             logging.info("Must create dst dir '%s'", dst_dir + '/' + a_dir)
             if DO_CHANGES:
-                os.mkdir(dst_dir + '/' + a_dir)
+                try:
+                    os.mkdir(dst_dir + '/' + a_dir)
+                except:
+                    logging.error('Cannot create dir %s', dst_dir + '/' + a_dir)
+                    return False
     for index, file in enumerate(src_files):
         must_sync = False
         src_stat = src_files_stat[index]
@@ -36,18 +40,27 @@ def _synchronize_trees(src_dir, src_dirs, src_files, src_files_stat, dst_dir, ds
                     shutil.copy2(src_file, dst_file)
                 except:
                     logging.error('Cannot copy file %s', src_file)
+                    return False
 
     if not add_only:
         for a_dir in dst_dirs:
            if a_dir not in src_dirs:
                 logging.info("Must delete dst dir '%s'", dst_dir + '/' + a_dir)
                 if DO_CHANGES:
-                    shutil.rmtree(dst_dir + '/' + a_dir)
+                    try:
+                        shutil.rmtree(dst_dir + '/' + a_dir)
+                    except:
+                        logging.error('Cannot delete dir %s', dst_dir + '/' + a_dir)
+                        return False
         for file in dst_files:
             if file not in src_files:
                 logging.info("Must delete dst file '%s'", dst_dir + '/' + file)
                 if DO_CHANGES:
-                    os.remove(dst_dir + '/' + file)
+                    try:
+                        os.remove(dst_dir + '/' + file)
+                    except:
+                        logging.error('Cannot remove file %s', dst_dir + '/' + file)
+                        return False
 
 
 def _sync(root_src, root_dst, current_dir, add_only, synchronize_function):
